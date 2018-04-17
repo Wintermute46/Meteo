@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Meteo</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Meteo</string>
+    <string name="nav_header_subtitle">About actual weather</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="change_city_dialog">Select city</string>
+    <string name="label_ok">OK</string>
+    <string name="menu_set_city">Select city</string>
+    <string name="place_not_found">Sorry, no weather data found.</string>
+    <string name="metar_not_found">Sorry, no METAR data found.</string>
+    <string name="weather_icon">weather icon</string>
+    <string name="temperature_label">Temperatures</string>
+    <string name="text_curr_temp">Current</string>
+    <string name="text_dewpoint">Dewpoint</string>
+    <string name="text_humidity">Humidity</string>
+    <string name="text_wind">Wind</string>
+    <string name="text_cloud">Clouds</string>
+    <string name="text_visibility">Visibility</string>
+    <string name="text_fr">Flight rules</string>
+    <string name="readings_label">Readings</string>
+    <string name="text_alt">Altimeter</string>
+    <string name="text_press">Pressure</string>
+    <string name="text_elev">Elevation</string>
+
+    <string name="json_error">One or more fields not found in the JSON data</string>
+    <string name="server_error">No data was received from server</string>
+    <string name="server_img_error">No image was received from server</string>
+    <string name="db_entry_add">Entry inserted, ID = </string>
+
+    <string name="menu_item_open_weather">OpenWeatherMap</string>
+    <string name="menu_item_metar">METAR</string>
+
+    <string name="owm_api_key">7777de2ebfa777bfaf983d3cd4139ba3</string>
+    <string name="checkwx_api_key">5b0c3ccddaa56b630a3c7baabb</string>
+
+    <string name="unexpected_code">Unexpected code</string>
+
+    <string-array name="cities">
+        <item>Kursk</item>
+        <item>Belgorod</item>
+        <item>Voronezh</item>
+        <item>Lipetsk</item>
+        <item>Bryansk</item>
+        <item>Tula</item>
+        <item>Saint Petersburg</item>
+        <item>Moscow</item>
+    </string-array>
+
+
+</resources>
