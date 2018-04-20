@@ -13,11 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black_text"
         android:textSize="32sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/name"
@@ -26,7 +25,8 @@
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/icao" />
+        app:layout_constraintTop_toBottomOf="@id/icao"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/metar_raw"
@@ -35,11 +35,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/observed"
@@ -47,14 +47,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/icao"
-        app:layout_constraintStart_toEndOf="@+id/icao" />
+        app:layout_constraintStart_toEndOf="@+id/icao"
+        style="@style/DataTextStyle" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
-        android:background="@color/devider"
+        android:background="@color/divider"
         app:layout_constraintTop_toBottomOf="@+id/metar_raw" />
 
     <TextView
@@ -63,12 +64,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
-        android:textColor="@color/black_text"
         android:textSize="20sp"
-        android:textStyle="bold"
         android:text="@string/temperature_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_current"
@@ -76,11 +76,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_curr_temp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textTemp" />
+        app:layout_constraintTop_toBottomOf="@+id/textTemp"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_dewpoint"
@@ -88,11 +87,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_dewpoint"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_current" />
+        app:layout_constraintTop_toBottomOf="@+id/text_current"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_humidity"
@@ -100,11 +98,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_humidity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_dewpoint" />
+        app:layout_constraintTop_toBottomOf="@+id/text_dewpoint"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_current_temp"
@@ -112,7 +109,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_current"
-        app:layout_constraintStart_toEndOf="@+id/text_current"/>
+        app:layout_constraintStart_toEndOf="@+id/text_current"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_dewpoint_temp"
@@ -120,7 +118,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_dewpoint"
-        app:layout_constraintStart_toEndOf="@+id/text_dewpoint"/>
+        app:layout_constraintStart_toEndOf="@+id/text_dewpoint"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_humidity_p"
@@ -128,14 +127,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_humidity"
-        app:layout_constraintStart_toEndOf="@+id/text_humidity"/>
+        app:layout_constraintStart_toEndOf="@+id/text_humidity"
+        style="@style/DataTextStyle" />
 
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
-        android:background="@color/devider"
+        android:background="@color/divider"
         app:layout_constraintTop_toBottomOf="@+id/text_humidity" />
 
     <TextView
@@ -144,11 +144,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginStart="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_wind"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/view2"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_clouds"
@@ -156,11 +155,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_cloud"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_wind" />
+        app:layout_constraintTop_toBottomOf="@+id/text_wind"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_visibility"
@@ -168,11 +166,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_visibility"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_clouds" />
+        app:layout_constraintTop_toBottomOf="@+id/text_clouds"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_fr"
@@ -180,11 +177,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_fr"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_visibility" />
+        app:layout_constraintTop_toBottomOf="@+id/text_visibility"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_wind_p"
@@ -192,7 +188,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_wind"
-        app:layout_constraintStart_toEndOf="@+id/text_wind"/>
+        app:layout_constraintStart_toEndOf="@+id/text_wind"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_clouds_p"
@@ -200,7 +197,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_clouds"
-        app:layout_constraintStart_toEndOf="@+id/text_clouds"/>
+        app:layout_constraintStart_toEndOf="@+id/text_clouds"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_visibility_p"
@@ -208,7 +206,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_visibility"
-        app:layout_constraintStart_toEndOf="@+id/text_visibility"/>
+        app:layout_constraintStart_toEndOf="@+id/text_visibility"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_fr_p"
@@ -216,14 +215,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_fr"
-        app:layout_constraintStart_toEndOf="@+id/text_fr"/>
+        app:layout_constraintStart_toEndOf="@+id/text_fr"
+        style="@style/DataTextStyle" />
 
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="8dp"
-        android:background="@color/devider"
+        android:background="@color/divider"
         app:layout_constraintTop_toBottomOf="@+id/text_fr" />
 
     <TextView
@@ -232,12 +232,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
-        android:textColor="@color/black_text"
         android:textSize="20sp"
-        android:textStyle="bold"
         android:text="@string/readings_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view3" />
+        app:layout_constraintTop_toBottomOf="@+id/view3"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_altimeter"
@@ -245,11 +244,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_alt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRead" />
+        app:layout_constraintTop_toBottomOf="@+id/textRead"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_pressure"
@@ -257,11 +255,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_press"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_altimeter" />
+        app:layout_constraintTop_toBottomOf="@+id/text_altimeter"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_elev"
@@ -269,11 +266,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/start_margin"
-        android:textStyle="bold"
-        android:textColor="@color/black_text"
         android:text="@string/text_elev"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_pressure" />
+        app:layout_constraintTop_toBottomOf="@+id/text_pressure"
+        style="@style/LabelTextStyle" />
 
     <TextView
         android:id="@+id/text_alt_p"
@@ -281,7 +277,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_altimeter"
-        app:layout_constraintStart_toEndOf="@+id/text_altimeter"/>
+        app:layout_constraintStart_toEndOf="@+id/text_altimeter"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_press_p"
@@ -289,7 +286,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_pressure"
-        app:layout_constraintStart_toEndOf="@+id/text_pressure"/>
+        app:layout_constraintStart_toEndOf="@+id/text_pressure"
+        style="@style/DataTextStyle" />
 
     <TextView
         android:id="@+id/text_elev_p"
@@ -297,6 +295,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_elev"
-        app:layout_constraintStart_toEndOf="@+id/text_elev"/>
+        app:layout_constraintStart_toEndOf="@+id/text_elev"
+        style="@style/DataTextStyle" />
 
 </android.support.constraint.ConstraintLayout>

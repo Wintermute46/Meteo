@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +42,7 @@ import java.util.Locale;
 // Fragment with OpenStreetMap weather data
 ///////////////////////////////////////////////////////////////////////////
 
-public class OWMdataFragment extends Fragment {
+public class OWMdataFragment extends Fragment implements Animation.AnimationListener {
 
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
@@ -197,6 +199,9 @@ public class OWMdataFragment extends Fragment {
 
         final String iconURL = String.format(ICON_URL, icon);
 
+        final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha);
+        anim.setAnimationListener(this);
+
         new Thread() {
 
         public void run() {
@@ -214,6 +219,7 @@ public class OWMdataFragment extends Fragment {
                     handler.post(new Runnable() {
                         public void run() {
                             weatherIcon.setImageBitmap(img);
+                            weatherIcon.startAnimation(anim);
                         }
                     });
                 }
@@ -226,4 +232,18 @@ public class OWMdataFragment extends Fragment {
         }.start();
     }
 
+    @Override
+    public void onAnimationStart(Animation animation) {
+        weatherIcon.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        weatherIcon.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+        weatherIcon.setVisibility(View.VISIBLE);
+    }
 }
