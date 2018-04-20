@@ -54,6 +54,8 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
     private TextView updatedTextView;
     private TextView detailsTextView;
     private TextView currentTemperatureTextView;
+    private TextView humidTextView;
+    private TextView pressTextView;
     private ImageView weatherIcon;
 
     @Override
@@ -68,6 +70,8 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
         updatedTextView = view.findViewById(R.id.updated_field);
         detailsTextView = view.findViewById(R.id.details_field);
         currentTemperatureTextView = view.findViewById(R.id.current_temperature_field);
+        humidTextView = view.findViewById(R.id.text_owm_humidity_p);
+        pressTextView = view.findViewById(R.id.text_owm_press_p);
         weatherIcon = view.findViewById(R.id.weather_icon);
 
         city = getArguments().getString(MainActivity.CITY_NAME);
@@ -97,6 +101,8 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
             detailsTextView.setText(cursor.getString(cursor.getColumnIndex("description")));
             currentTemperatureTextView.setText(cursor.getString(cursor.getColumnIndex("temperature")));
             updatedTextView.setText(cursor.getString(cursor.getColumnIndex("observed")));
+            humidTextView.setText(cursor.getString(cursor.getColumnIndex("humidity")));
+            pressTextView.setText(cursor.getString(cursor.getColumnIndex("pressure")));
 
             setWeatherIcon(cursor.getString(cursor.getColumnIndex("iconId")));
         }
@@ -150,17 +156,21 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
             cityTextView.setText(name);
 
             String description = "";
-            long id = 0;
 
             if(data.weather.size() != 0){
                 description = data.weather.get(0).description.toUpperCase(Locale.US);
-                id = data.weather.get(0).id;
             }
 
-            String details = description + "\n" + getString(R.string.text_humidity) + " " +
-                    + data.main.humidity + "%" + "\n" + getString(R.string.text_press) + " " + data.main.pressure + " hPa";
             cv.put(DbContract.WeatherEntry.COL_DESCR, description);
-            detailsTextView.setText(details);
+            detailsTextView.setText(description);
+
+            String hum = data.main.humidity + "%";
+            cv.put(DbContract.WeatherEntry.COL_HUMID, hum);
+            humidTextView.setText(hum);
+
+            String press = data.main.pressure + " hPa";
+            cv.put(DbContract.WeatherEntry.COL_PRESS, press);
+            pressTextView.setText(press);
 
             String currT = String.format("%.2f", data.main.tempBig) + " ℃";
             cv.put(DbContract.WeatherEntry.COL_TEMP, currT);
@@ -219,6 +229,13 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
                     handler.post(new Runnable() {
                         public void run() {
                             weatherIcon.setImageBitmap(img);
+                            weatherIcon.startAnimation(anim);
+                        }
+                    });
+                } else {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            weatherIcon.setImageResource(R.drawable.ic_45);
                             weatherIcon.startAnimation(anim);
                         }
                     });

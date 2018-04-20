@@ -16,6 +16,8 @@ public class DbContract {
                     WeatherEntry.COL_UPD + TYPE_TEXT + SEP +
                     WeatherEntry.COL_ICON + TYPE_TEXT + SEP +
                     WeatherEntry.COL_DESCR + TYPE_TEXT + SEP +
+                    WeatherEntry.COL_HUMID + TYPE_TEXT + SEP +
+                    WeatherEntry.COL_PRESS + TYPE_TEXT + SEP +
                     WeatherEntry.COL_TEMP + TYPE_TEXT + ")";
 
     public static final String SQL_DELETE_WEATHER =
@@ -54,6 +56,8 @@ public class DbContract {
         public static final String COL_UPD = "observed";
         public static final String COL_ICON = "iconId";
         public static final String COL_DESCR = "description";
+        public static final String COL_HUMID = "humidity";
+        public static final String COL_PRESS = "pressure";
         public static final String COL_TEMP = "temperature";
 
     }

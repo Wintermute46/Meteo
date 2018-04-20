@@ -13,7 +13,7 @@
         android:id="@+id/city_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="16dp"
         android:textSize="32sp"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/start_margin"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="@dimen/updated_font_size"
         app:layout_constraintTop_toBottomOf="@+id/city_field"
@@ -36,11 +36,10 @@
         android:id="@+id/weather_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_below="@+id/updated_field"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/weather_icon"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_45"
+        android:background="?selectableItemBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/current_temperature_field" />
@@ -50,7 +49,7 @@
         style="@style/LabelTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/temperature_font_size"
@@ -63,10 +62,52 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/weather_icon"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/weather_icon"
+        style="@style/LabelTextStyle" />
+
+    <TextView
+        android:id="@+id/text_owm_humidity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_humidity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/details_field"
+        style="@style/LabelTextStyle" />
+
+    <TextView
+        android:id="@+id/text_owm_press"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_press"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_owm_humidity"
+        style="@style/LabelTextStyle" />
+
+    <TextView
+        android:id="@+id/text_owm_humidity_p"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_owm_humidity"
+        app:layout_constraintStart_toEndOf="@+id/text_owm_humidity"
+        style="@style/DataTextStyle" />
+
+    <TextView
+        android:id="@+id/text_owm_press_p"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_owm_press"
+        app:layout_constraintStart_toEndOf="@+id/text_owm_press"
+        style="@style/DataTextStyle" />
+
 
 </android.support.constraint.ConstraintLayout>
