@@ -19,39 +19,40 @@ import java.util.Locale;
 //provider https://checkwx.com/
 //METAR https://ru.wikipedia.org/wiki/METAR
 ///////////////////////////////////////////////////////////////////////////
-
+@Deprecated
 public class MetarDataLoader {
 
     private final static String METAR_URL = "https://api.checkwx.com/metar/lat/%f/lon/%f/decoded";
     private final static String KEY = "X-API-Key";
 
+    @Deprecated
     public static MetarData getMetarData(final Context context, final float lat, final float lon) {
 
-            try {
-                OkHttpClient client = new OkHttpClient();
-                HttpUrl.Builder urlBuilder = HttpUrl.parse(String.format(Locale.US, METAR_URL, lat, lon))
-                                                    .newBuilder();
-                final Request request = new Request.Builder().url(urlBuilder.build().toString())
-                                                    .addHeader(KEY, context.getString(R.string.checkwx_api_key))
-                                                    .build();
+        try {
+            OkHttpClient client = new OkHttpClient();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(String.format(Locale.US, METAR_URL, lat, lon))
+                    .newBuilder();
+            final Request request = new Request.Builder().url(urlBuilder.build().toString())
+                    .addHeader(KEY, context.getString(R.string.checkwx_api_key))
+                    .build();
 
-                Response response = client.newCall(request).execute();
+            Response response = client.newCall(request).execute();
 
-                if(response.isSuccessful()) {
-                    String resp = response.body().string();
+            if(response.isSuccessful()) {
+                String resp = response.body().string();
 
-                    GsonBuilder builder = new GsonBuilder();
-                    Gson gson = builder.create();
-                    return gson.fromJson(resp, MetarData.class);
+                GsonBuilder builder = new GsonBuilder();
+                Gson gson = builder.create();
+                return gson.fromJson(resp, MetarData.class);
 
-                } else
-                    return null;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(context, context.getString(R.string.server_error), Toast.LENGTH_LONG).show();
+            } else
                 return null;
-            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, context.getString(R.string.server_error), Toast.LENGTH_LONG).show();
+            return null;
+        }
     }
 
 }

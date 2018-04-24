@@ -15,13 +15,14 @@ import com.squareup.okhttp.Response;
 // Get the weather information
 //provider https://openweathermap.org/
 ///////////////////////////////////////////////////////////////////////////
-
+@Deprecated
 public class OwmDataLoader {
 
     private final static String OWM_URL = "http://api.openweathermap.org/data/2.5/weather?q=%s&lang=ru&units=metric";
     private final static String KEY = "APPID";  //"x-api-key";
     private final static int OK_RESP = 200;
 
+    @Deprecated
     public static CityData getOwmData(final Context context, final String city) {
         try {
             OkHttpClient client = new OkHttpClient();

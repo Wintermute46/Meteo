@@ -1,9 +1,10 @@
 package com.geek.hw.meteo.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CityData {
+public class CityData implements Serializable {
 
     public CoordinatesModel coord;
     public List<WeatherModel> weather = new ArrayList<WeatherModel>();

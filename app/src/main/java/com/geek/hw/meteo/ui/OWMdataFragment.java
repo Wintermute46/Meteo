@@ -2,14 +2,14 @@ package com.geek.hw.meteo.ui;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,18 +20,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.geek.hw.meteo.MainActivity;
-import com.geek.hw.meteo.OwmDataLoader;
 import com.geek.hw.meteo.R;
 import com.geek.hw.meteo.db.DbContract;
 import com.geek.hw.meteo.db.DbHelper;
 import com.geek.hw.meteo.models.CityData;
+import com.geek.hw.meteo.services.OwmService;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -47,6 +45,8 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
     private static final String LOG_TAG = OWMdataFragment.class.getSimpleName();
+    public static final String RECEIVER = "receiver";
+    public static final int RES_CODE = 1;
     private final static String ICON_URL = "http://openweathermap.org/img/w/%s.png";
     private String city;
 
@@ -116,27 +116,24 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 ///////////////////////////////////////////////////////////////////////////
 
     private void updateWeatherData(final String city) {
-        new Thread() {
-            public void run() {
-                final CityData data = OwmDataLoader.getOwmData(getActivity(), city);
 
-                if (data == null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getActivity(), getString(R.string.place_not_found),
-                                    Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getActivity().getApplicationContext(), OwmService.class);
+        intent.putExtra(MainActivity.CITY_NAME, city)
+                .putExtra(RECEIVER, new ResultReceiver(new Handler()) {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+                        if (resultCode == RES_CODE) {
+                            CityData cityData = (CityData) resultData.getSerializable(MainActivity.CITY_NAME);
+                            if (cityData == null)
+                                Toast.makeText(getActivity(), getString(R.string.place_not_found),
+                                        Toast.LENGTH_LONG).show();
+                            else
+                                renderWeather(cityData);
                         }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            renderWeather(data);
-                        }
-                    });
-                }
+                    }
+                });
 
-            }
-        }.start();
+        getActivity().startService(intent);
     }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -242,7 +239,7 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(LOG_TAG, e.getLocalizedMessage());
                 Toast.makeText(getActivity(), getString(R.string.server_img_error), Toast.LENGTH_LONG).show();
             }
         }

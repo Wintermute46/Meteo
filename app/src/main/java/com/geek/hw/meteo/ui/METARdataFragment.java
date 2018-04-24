@@ -2,10 +2,12 @@ package com.geek.hw.meteo.ui;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +16,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.geek.hw.meteo.MainActivity;
-import com.geek.hw.meteo.MetarDataLoader;
-import com.geek.hw.meteo.OwmDataLoader;
 import com.geek.hw.meteo.R;
 import com.geek.hw.meteo.db.DbContract;
 import com.geek.hw.meteo.db.DbHelper;
-import com.geek.hw.meteo.models.CityData;
 import com.geek.hw.meteo.models.MetarData;
+import com.geek.hw.meteo.services.MetarService;
 
 ///////////////////////////////////////////////////////////////////////////
 // Fragment with METAR meteo data closest to a parameter latitude/longitude
@@ -35,6 +35,10 @@ public class METARdataFragment extends Fragment {
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
     private static final String LOG_TAG = METARdataFragment.class.getSimpleName();
+    public static final String LONG = "longitude";
+    public static final String LATI = "latitude";
+    public static final String RECEIVER = "receiver";
+    public static final int RES_CODE = 2;
 
     private TextView icao;
     private TextView name;
@@ -127,26 +131,25 @@ public class METARdataFragment extends Fragment {
 ///////////////////////////////////////////////////////////////////////////
 
     private void updateMetarData(final float lon, final float lat){
-        new Thread(){
-            public void run() {
-                final MetarData data = MetarDataLoader.getMetarData(getActivity(), lon, lat);
 
-                if (data == null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getActivity(), getString(R.string.metar_not_found),
+        Intent intent = new Intent(getActivity().getApplicationContext(), MetarService.class);
+        intent.putExtra(LATI, lat)
+                .putExtra(LONG, lon)
+                .putExtra(RECEIVER, new ResultReceiver(new Handler()) {
+                    @Override
+                    protected void onReceiveResult(int resultCode, Bundle resultData) {
+                        if (resultCode == RES_CODE) {
+                            MetarData metarData = (MetarData) resultData.getSerializable(MainActivity.CITY_NAME);
+                            if (metarData == null)
+                                Toast.makeText(getActivity(), getString(R.string.metar_not_found),
                                     Toast.LENGTH_LONG).show();
+                            else
+                                renderMetar(metarData);
                         }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            renderMetar(data);
-                        }
-                    });
-                }
-            }
-        }.start();
+                    }
+                });
+
+        getActivity().startService(intent);
     }
 
 ///////////////////////////////////////////////////////////////////////////
