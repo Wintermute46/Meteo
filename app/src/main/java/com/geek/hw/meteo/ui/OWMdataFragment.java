@@ -1,6 +1,5 @@
 package com.geek.hw.meteo.ui;
 
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -47,7 +46,6 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
     private static final String LOG_TAG = OWMdataFragment.class.getSimpleName();
-    private final static String ICON_URL = "http://openweathermap.org/img/w/%s.png";
     private String city;
 
     private TextView cityTextView;
@@ -207,46 +205,14 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 
     private void setWeatherIcon(String icon){
 
-        final String iconURL = String.format(ICON_URL, icon);
-
         final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha);
         anim.setAnimationListener(this);
 
-        new Thread() {
+        String iconName = "ic_" + icon;
 
-        public void run() {
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder builder = HttpUrl.parse(iconURL).newBuilder();
-            final Request request = new Request.Builder().url(builder.build().toString()).build();
-
-            try {
-                final Response response = client.newCall(request).execute();
-                InputStream inputStream = response.body().byteStream();
-
-                final Bitmap img = BitmapFactory.decodeStream(inputStream);
-
-                if(img != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            weatherIcon.setImageBitmap(img);
-                            weatherIcon.startAnimation(anim);
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            weatherIcon.setImageResource(R.drawable.ic_45);
-                            weatherIcon.startAnimation(anim);
-                        }
-                    });
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), getString(R.string.server_img_error), Toast.LENGTH_LONG).show();
-            }
-        }
-        }.start();
+        weatherIcon.setImageResource(getResources()
+                .getIdentifier(iconName, "drawable", "com.geek.hw.meteo"));
+        weatherIcon.startAnimation(anim);
     }
 
     @Override
