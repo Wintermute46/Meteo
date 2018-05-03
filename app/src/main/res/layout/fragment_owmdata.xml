@@ -109,5 +109,4 @@
         app:layout_constraintStart_toEndOf="@+id/text_owm_press"
         style="@style/DataTextStyle" />
 
-
 </android.support.constraint.ConstraintLayout>

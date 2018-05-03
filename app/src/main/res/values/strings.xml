@@ -8,7 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="change_city_dialog">Select city</string>
     <string name="label_ok">OK</string>
-    <string name="menu_set_city">Select city</string>
+    <string name="menu_set_city">Select another city</string>
     <string name="place_not_found">Sorry, no weather data found.</string>
     <string name="metar_not_found">Sorry, no METAR data found.</string>
     <string name="weather_icon">weather icon</string>
