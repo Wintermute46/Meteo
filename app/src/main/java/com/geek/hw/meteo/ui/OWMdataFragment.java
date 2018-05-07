@@ -121,7 +121,8 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
     private void updateWeatherData(final String city) {
         new Thread() {
             public void run() {
-                final CityData data = OwmDataLoader.getOwmData(getActivity(), city);
+                final CityData data = OwmDataLoader.getOwmData(getActivity(), MainActivity.LAT, MainActivity.LON);
+//                final CityData data = OwmDataLoader.getOwmData(getActivity(), city);
 
                 if (data == null) {
                     handler.post(new Runnable() {

@@ -1,8 +1,15 @@
 package com.geek.hw.meteo;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.geek.hw.meteo.ui.AddCityDialogListener;
 import com.geek.hw.meteo.ui.METARdataFragment;
 import com.geek.hw.meteo.ui.OWMdataFragment;
@@ -23,6 +31,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
@@ -35,14 +44,16 @@ import com.orhanobut.hawk.Hawk;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AddCityDialogListener {
 
-    public static float LAT;
-    public static float LON;
+    public static double LAT;
+    public static double LON;
 
     public final static String CITY_NAME = "city";
     public final static int SEL_CITY_REQUEST_CODE = 1;
+    public final static int REQ_PERMISSION = 101;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static String selectedCity;
     private NavigationView navigationView;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PERMISSION);
+//            return;
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5000.0f, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 5000.0f, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 5, 5000.0f, locationListener);
+        }
+
 
         Hawk.init(this).build();
 
@@ -68,7 +91,18 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null)
-            setScreen(R.id.nav_open_weather, selectedCity);
+            setScreen(R.id.nav_open_weather);
+
+    }
+
+///////////////////////////////////////////////////////////////////////////
+// Get location
+///////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
 
     }
 
@@ -83,18 +117,20 @@ public class MainActivity extends AppCompatActivity
         Hawk.put(CITY_NAME, selectedCity);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQ_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.onResume();
+                }
+        }
+    }
+
 ///////////////////////////////////////////////////////////////////////////
 // Menu and navigation
 ///////////////////////////////////////////////////////////////////////////
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SEL_CITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Place place = PlaceAutocomplete.getPlace(this, data);
-            Log.i(LOG_TAG, place.getName().toString());
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     @Override
     public void onBackPressed() {
@@ -113,11 +149,35 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_open_weather:
+                setScreen(R.id.nav_open_weather);
+                break;
+            case R.id.nav_metar:
+                setScreen(R.id.nav_metar);
+                break;
+        }
+
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+///////////////////////////////////////////////////////////////////////////
+// Google places
+///////////////////////////////////////////////////////////////////////////
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_set_city:
                 try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(this);
+                    AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                            .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .setFilter(filter).build(this);
                     startActivityForResult(intent, SEL_CITY_REQUEST_CODE);
                 } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
                     Log.e(LOG_TAG, e.getMessage());
@@ -129,34 +189,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+///////////////////////////////////////////////////////////////////////////
+// Set another city and coordinates
+///////////////////////////////////////////////////////////////////////////
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_open_weather:
-                setScreen(R.id.nav_open_weather, selectedCity);
-                break;
-            case R.id.nav_metar:
-                setScreen(R.id.nav_metar, selectedCity);
-                break;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SEL_CITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Place place = PlaceAutocomplete.getPlace(this, data);
+//            Log.i(LOG_TAG, place.getLatLng().latitude);
+//            String s = place.getName().toString();
+            LAT = (float) place.getLatLng().latitude;
+            LON = (float) place.getLatLng().longitude;
+            selectedCity = place.getName().toString();
+            setScreen(R.id.nav_open_weather);
         }
-
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public void onSelectCity(String city) {
-        selectedCity = city;
-        setScreen(R.id.nav_open_weather, selectedCity);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 ///////////////////////////////////////////////////////////////////////////
 // Fragments call
 ///////////////////////////////////////////////////////////////////////////
 
-    private void setScreen(int itemId, String city) {
+    //    int itemId, String city
+    private void setScreen(int itemId) {
         Fragment fragment;
 
         switch (itemId) {
@@ -173,11 +229,40 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
-        bundle.putString(CITY_NAME, city);
+        bundle.putString(CITY_NAME, selectedCity);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.commit();
         navigationView.setCheckedItem(itemId);
     }
+
+    @Override
+    public void onSelectCity(String city) {
+        selectedCity = city;
+        setScreen(R.id.nav_open_weather);
+    }
+
+    LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            LAT = location.getLatitude();
+            LON = location.getLongitude();
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
 }

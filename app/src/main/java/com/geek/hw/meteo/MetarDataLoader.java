@@ -25,7 +25,7 @@ public class MetarDataLoader {
     private final static String METAR_URL = "https://api.checkwx.com/metar/lat/%f/lon/%f/decoded";
     private final static String KEY = "X-API-Key";
 
-    public static MetarData getMetarData(final Context context, final float lat, final float lon) {
+    public static MetarData getMetarData(final Context context, final double lat, final double lon) {
 
             try {
                 OkHttpClient client = new OkHttpClient();

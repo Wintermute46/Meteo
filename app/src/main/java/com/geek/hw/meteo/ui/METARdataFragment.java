@@ -29,8 +29,8 @@ import com.geek.hw.meteo.models.MetarData;
 
 public class METARdataFragment extends Fragment {
 
-    private static float LAT;
-    private static float LON;
+    private static double LAT;
+    private static double LON;
 
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
@@ -126,7 +126,7 @@ public class METARdataFragment extends Fragment {
 // Get the weather
 ///////////////////////////////////////////////////////////////////////////
 
-    private void updateMetarData(final float lon, final float lat){
+    private void updateMetarData(final double lon, final double lat) {
         new Thread(){
             public void run() {
                 final MetarData data = MetarDataLoader.getMetarData(getActivity(), lon, lat);

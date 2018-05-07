@@ -11,6 +11,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import java.util.Locale;
+
 ///////////////////////////////////////////////////////////////////////////
 // Get the weather information
 //provider https://openweathermap.org/
@@ -18,14 +20,17 @@ import com.squareup.okhttp.Response;
 
 public class OwmDataLoader {
 
-    private final static String OWM_URL = "http://api.openweathermap.org/data/2.5/weather?q=%s&lang=ru&units=metric";
+    private final static String OWM_URL = "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&lang=ru&units=metric";
+    //"http://api.openweathermap.org/data/2.5/weather?q=%s&lang=ru&units=metric";
+//    "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&lang=ru&units=metric"
     private final static String KEY = "APPID";  //"x-api-key";
     private final static int OK_RESP = 200;
 
-    public static CityData getOwmData(final Context context, final String city) {
+    //    (final Context context, final String city) final Context context, final float lat, final float lon
+    public static CityData getOwmData(final Context context, final double lat, final double lon) {
         try {
             OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(String.format(OWM_URL, city)).newBuilder();
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(String.format(OWM_URL, lat, lon)).newBuilder();
             urlBuilder.addQueryParameter(KEY, context.getString(R.string.owm_api_key));
             final Request request = new Request.Builder().url(urlBuilder.build().toString()).build();
 
