@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private static String selectedCity;
     private NavigationView navigationView;
     private LocationManager locationManager;
+    private Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +62,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PERMISSION);
-//            return;
-        } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5000.0f, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 5000.0f, locationListener);
-            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 5, 5000.0f, locationListener);
-        }
-
 
         Hawk.init(this).build();
 
@@ -90,6 +79,24 @@ public class MainActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PERMISSION);
+        } else {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 5000.0f, locationListener);
+                LAT = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+                LON = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+            } else if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
+            }
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5000.0f, locationListener);
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 5000.0f, locationListener);
+//            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 5, 5000.0f, locationListener);
+
+        }
+
         if (savedInstanceState == null)
             setScreen(R.id.nav_open_weather);
 
@@ -103,8 +110,28 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+////        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PERMISSION);
+////            return;
+//        } else {
+////            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 5000.0f, locationListener);
+////            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5, 5000.0f, locationListener);
+////            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 5, 5000.0f, locationListener);
+//            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+////            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
+////            locationManager.requestSingleUpdate(LocationManager.PASSIVE_PROVIDER, locationListener, null);
+//        }
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(locationListener);
+    }
+
 
 ///////////////////////////////////////////////////////////////////////////
 // Save data
@@ -199,8 +226,8 @@ public class MainActivity extends AppCompatActivity
             Place place = PlaceAutocomplete.getPlace(this, data);
 //            Log.i(LOG_TAG, place.getLatLng().latitude);
 //            String s = place.getName().toString();
-            LAT = (float) place.getLatLng().latitude;
-            LON = (float) place.getLatLng().longitude;
+            LAT = place.getLatLng().latitude;
+            LON = place.getLatLng().longitude;
             selectedCity = place.getName().toString();
             setScreen(R.id.nav_open_weather);
         }
@@ -246,8 +273,8 @@ public class MainActivity extends AppCompatActivity
     LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            LAT = location.getLatitude();
-            LON = location.getLongitude();
+//            LAT = location.getLatitude();
+//            LON = location.getLongitude();
         }
 
         @Override
