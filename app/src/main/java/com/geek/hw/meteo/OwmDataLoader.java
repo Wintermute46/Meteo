@@ -1,6 +1,7 @@
 package com.geek.hw.meteo;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.geek.hw.meteo.models.CityData;
@@ -21,10 +22,9 @@ import java.util.Locale;
 public class OwmDataLoader {
 
     private final static String OWM_URL = "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&lang=ru&units=metric";
-    //"http://api.openweathermap.org/data/2.5/weather?q=%s&lang=ru&units=metric";
-//    "http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&lang=ru&units=metric"
     private final static String KEY = "APPID";  //"x-api-key";
     private final static int OK_RESP = 200;
+    private static final String LOG_TAG = OwmDataLoader.class.getSimpleName();
 
     //    (final Context context, final String city) final Context context, final float lat, final float lon
     public static CityData getOwmData(final Context context, final double lat, final double lon) {
@@ -48,7 +48,7 @@ public class OwmDataLoader {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, context.getString(R.string.server_error), Toast.LENGTH_LONG).show();
+            Log.e(LOG_TAG, e.getMessage());
             return null;
         }
     }

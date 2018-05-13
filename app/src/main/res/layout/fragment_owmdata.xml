@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         android:textSize="32sp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         style="@style/LabelTextStyle" />
 
     <TextView
-        android:id="@+id/updated_field"
+        android:id="@+id/region_field"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -37,12 +37,13 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/weather_icon"
         android:scaleType="fitXY"
         android:background="?selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current_temperature_field" />
+        app:layout_constraintTop_toBottomOf="@+id/region_field" />
 
     <TextView
         android:id="@+id/current_temperature_field"
@@ -50,11 +51,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/temperature_font_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updated_field" />
+        app:layout_constraintStart_toEndOf="@+id/weather_icon"
+        app:layout_constraintTop_toTopOf="@+id/weather_icon" />
 
     <TextView
         android:id="@+id/details_field"
@@ -65,6 +65,17 @@
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="8dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constraintStart_toEndOf="@+id/weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/current_temperature_field"
+        style="@style/LabelTextStyle" />
+
+    <TextView
+        android:id="@+id/text_owm_wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginTop="16dp"
+        android:text="@string/text_wind"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weather_icon"
         style="@style/LabelTextStyle" />
@@ -77,7 +88,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/text_humidity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_field"
+        app:layout_constraintTop_toBottomOf="@+id/text_owm_wind"
         style="@style/LabelTextStyle" />
 
     <TextView
@@ -90,6 +101,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_owm_humidity"
         style="@style/LabelTextStyle" />
+
+    <TextView
+        android:id="@+id/text_owm_wind_p"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_owm_wind"
+        app:layout_constraintStart_toEndOf="@+id/text_owm_wind"
+        style="@style/DataTextStyle" />
+
+    <ImageView
+        android:id="@+id/wind_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/start_margin"
+        android:src="@drawable/ic_wind_dir"
+        app:layout_constraintBottom_toBottomOf="@+id/text_owm_wind_p"
+        app:layout_constraintStart_toEndOf="@+id/text_owm_wind_p" />
 
     <TextView
         android:id="@+id/text_owm_humidity_p"
@@ -108,5 +138,16 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/text_owm_press"
         app:layout_constraintStart_toEndOf="@+id/text_owm_press"
         style="@style/DataTextStyle" />
+
+    <TextView
+        android:id="@+id/updated_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/start_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/updated_font_size"
+        app:layout_constraintTop_toBottomOf="@+id/text_owm_press_p"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

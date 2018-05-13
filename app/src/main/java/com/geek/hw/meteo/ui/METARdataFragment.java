@@ -59,8 +59,8 @@ public class METARdataFragment extends Fragment {
 
         dbHelper = new DbHelper(getContext());
 
-        LAT = MainActivity.LAT;
-        LON = MainActivity.LON;
+        LAT = getArguments().getDouble(MainActivity.LATITUDE);
+        LON = getArguments().getDouble(MainActivity.LONGITUDE);
 
         icao = view.findViewById(R.id.icao);
         name = view.findViewById(R.id.name);

@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import com.geek.hw.meteo.R;
 import com.orhanobut.hawk.Hawk;
 
+@Deprecated
 public class SelectCityDialog extends DialogFragment {
 
     private final static String SETTINGS_STORAGE_SPINNER_ID = "SpinnerId";
@@ -37,7 +38,7 @@ public class SelectCityDialog extends DialogFragment {
 
         String[] items = getResources().getStringArray(R.array.cities);
         ArrayAdapter<String> spinItems = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,
-                                                                    items);
+                items);
         spinner.setAdapter(spinItems);
         spinner.setSelection(spinnerId);
 

@@ -51,12 +51,21 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
     private static final String LOG_TAG = OWMdataFragment.class.getSimpleName();
-    private String city;
+    private static String city;
+    private static String region;
+    private static double LAT;
+    private static double LON;
 
     private TextView cityTextView;
+    private TextView regionTextView;
     private TextView updatedTextView;
     private TextView detailsTextView;
     private TextView currentTemperatureTextView;
+    private TextView windLabel;
+    private TextView windTextView;
+    private ImageView windIcon;
+    private TextView humidLabel;
+    private TextView pressLabel;
     private TextView humidTextView;
     private TextView pressTextView;
     private ImageView weatherIcon;
@@ -70,18 +79,35 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
         dbHelper = new DbHelper(getContext());
 
         cityTextView = view.findViewById(R.id.city_field);
+        regionTextView = view.findViewById(R.id.region_field);
         updatedTextView = view.findViewById(R.id.updated_field);
         detailsTextView = view.findViewById(R.id.details_field);
         currentTemperatureTextView = view.findViewById(R.id.current_temperature_field);
+        windLabel = view.findViewById(R.id.text_owm_wind);
+        windTextView = view.findViewById(R.id.text_owm_wind_p);
+        windIcon = view.findViewById(R.id.wind_icon);
+        humidLabel = view.findViewById(R.id.text_owm_humidity);
+        pressLabel = view.findViewById(R.id.text_owm_press);
         humidTextView = view.findViewById(R.id.text_owm_humidity_p);
         pressTextView = view.findViewById(R.id.text_owm_press_p);
         weatherIcon = view.findViewById(R.id.weather_icon);
 
+        windLabel.setVisibility(View.INVISIBLE);
+        windIcon.setVisibility(View.INVISIBLE);
+        humidLabel.setVisibility(View.INVISIBLE);
+        pressLabel.setVisibility(View.INVISIBLE);
+
+
         city = getArguments().getString(MainActivity.CITY_NAME);
+        region = getArguments().getString(MainActivity.REG_NAME);
+        LAT = getArguments().getDouble(MainActivity.LATITUDE);
+        LON = getArguments().getDouble(MainActivity.LONGITUDE);
 
-        getDataCache(city);
+        if (city != null)
+            getDataCache(city);
 
-        updateWeatherData(city);
+        if (LAT != 0 && LON != 0)
+            updateWeatherData();
 
         return view;
     }
@@ -100,7 +126,8 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
                 null, selection, args, null, null, null);
 
         if(cursor.moveToFirst()) {
-            cityTextView.setText(cursor.getString(cursor.getColumnIndex("cityCountry")));
+            cityTextView.setText(cursor.getString(cursor.getColumnIndex("city")));
+//            cityTextView.setText(cursor.getString(cursor.getColumnIndex("cityCountry")));
             detailsTextView.setText(cursor.getString(cursor.getColumnIndex("description")));
             currentTemperatureTextView.setText(cursor.getString(cursor.getColumnIndex("temperature")));
             updatedTextView.setText(cursor.getString(cursor.getColumnIndex("observed")));
@@ -118,10 +145,10 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 // Get the weather
 ///////////////////////////////////////////////////////////////////////////
 
-    private void updateWeatherData(final String city) {
+    private void updateWeatherData() {
         new Thread() {
             public void run() {
-                final CityData data = OwmDataLoader.getOwmData(getActivity(), MainActivity.LAT, MainActivity.LON);
+                final CityData data = OwmDataLoader.getOwmData(getActivity(), LAT, LON);
 //                final CityData data = OwmDataLoader.getOwmData(getActivity(), city);
 
                 if (data == null) {
@@ -155,9 +182,13 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
         try {
 
             String name = data.name.toUpperCase(Locale.US) + ", " + data.sys.country;
-            cv.put(DbContract.WeatherEntry.COL_CITY, data.name);
+            cv.put(DbContract.WeatherEntry.COL_CITY, city);
+//            cv.put(DbContract.WeatherEntry.COL_CITY, data.name);
             cv.put(DbContract.WeatherEntry.COL_CITY_C, name);
+            name = city;
             cityTextView.setText(name);
+
+            regionTextView.setText(region);
 
             String description = "";
 
@@ -168,15 +199,27 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
             cv.put(DbContract.WeatherEntry.COL_DESCR, description);
             detailsTextView.setText(description);
 
+            String wind = String.format("%.0f", data.wind.speed) + " м/с";
+
+            windLabel.setVisibility(View.VISIBLE);
+            windTextView.setText(wind);
+
+            float rot = data.wind.deg + 180.0f;
+
+            windIcon.setVisibility(View.VISIBLE);
+            windIcon.setRotation(rot);
+
             String hum = data.main.humidity + "%";
             cv.put(DbContract.WeatherEntry.COL_HUMID, hum);
+            humidLabel.setVisibility(View.VISIBLE);
             humidTextView.setText(hum);
 
             String press = data.main.pressure + " hPa";
             cv.put(DbContract.WeatherEntry.COL_PRESS, press);
+            pressLabel.setVisibility(View.VISIBLE);
             pressTextView.setText(press);
 
-            String currT = String.format("%.2f", data.main.tempBig) + " ℃";
+            String currT = String.format("%.0f", data.main.tempBig) + " ℃";
             cv.put(DbContract.WeatherEntry.COL_TEMP, currT);
             currentTemperatureTextView.setText(currT);
 
@@ -185,9 +228,6 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
             String upd = "Last update: " + updatedOn;
             cv.put(DbContract.WeatherEntry.COL_UPD, upd);
             updatedTextView.setText(upd);
-
-            MainActivity.LAT = data.coord.lat;
-            MainActivity.LON = data.coord.lon;
 
             setWeatherIcon(data.weather.get(0).icon);
             cv.put(DbContract.WeatherEntry.COL_ICON, data.weather.get(0).icon);
