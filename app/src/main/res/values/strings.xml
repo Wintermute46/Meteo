@@ -24,6 +24,7 @@
     <string name="text_alt">Altimeter</string>
     <string name="text_press">Pressure</string>
     <string name="text_elev">Elevation</string>
+    <string name="text_no_data">No data</string>
 
     <string name="json_error">One or more fields not found in the JSON data</string>
     <string name="server_error">No data was received from server</string>

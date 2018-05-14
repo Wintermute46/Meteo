@@ -7,7 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -34,7 +33,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.orhanobut.hawk.Hawk;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -58,7 +56,6 @@ public class MainActivity extends AppCompatActivity
     public final static int SEL_CITY_REQUEST_CODE = 1;
     public final static int REQ_PERMISSION = 101;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private final Handler handler = new Handler();
     private NavigationView navigationView;
 
     @Override
@@ -107,12 +104,7 @@ public class MainActivity extends AppCompatActivity
                         LON = location.getLongitude();
 
                         getCityRegionName();
-
-                        handler.post(new Runnable() {
-                            public void run() {
-                                setScreen(R.id.nav_open_weather);
-                            }
-                        });
+                        setScreen(R.id.nav_open_weather);
                     }
                 }
             });
@@ -223,7 +215,6 @@ public class MainActivity extends AppCompatActivity
             LAT = place.getLatLng().latitude;
             LON = place.getLatLng().longitude;
             getCityRegionName();
-//            selectedCity = place.getName().toString();
             setScreen(R.id.nav_open_weather);
         }
         super.onActivityResult(requestCode, resultCode, data);
