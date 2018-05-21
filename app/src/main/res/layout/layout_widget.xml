@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/start_margin"
         android:layout_marginTop="4dp"
-        android:text="TextView"
         android:textAppearance="?android:attr/textAppearanceLarge"
         style="@style/LabelTextStyle" />
 
@@ -29,23 +28,33 @@
         android:id="@+id/widget_currtemp"
         android:layout_width="wrap_content"
         android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginEnd="@dimen/start_margin"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
         android:layout_alignTop="@+id/widget_icon"
-        android:layout_toEndOf="@+id/widget_icon"
-        android:text="TextView"
         android:textAppearance="?android:attr/textAppearanceLarge"
         style="@style/LabelTextStyle" />
 
     <TextView
-        android:id="@+id/widget_descr"
+        android:id="@+id/widget_wind"
         style="@style/LabelTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widget_wind_icon"
+        android:layout_marginEnd="@dimen/start_margin"
         android:layout_marginStart="@dimen/start_margin"
-        android:layout_alignBottom="@+id/widget_icon"
-        android:layout_toEndOf="@+id/widget_icon"
-        android:text="TextView"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:id="@+id/widget_wind_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/start_margin"
+        android:layout_alignTop="@+id/widget_icon" />
 
 
 </RelativeLayout>

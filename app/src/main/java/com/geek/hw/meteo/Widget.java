@@ -5,6 +5,9 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,6 +21,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.List;
 import java.util.Locale;
+
+import static android.graphics.Bitmap.createBitmap;
 
 public class Widget extends AppWidgetProvider {
     private static final String LOG_TAG = Widget.class.getSimpleName();
@@ -55,12 +60,14 @@ public class Widget extends AppWidgetProvider {
 
                                 if (data != null) {
                                     rv.setTextViewText(R.id.widget_currtemp, String.format("%.0f", data.main.tempBig) + " ℃");
-                                    rv.setTextViewText(R.id.widget_descr, data.weather.get(0).description.toUpperCase(Locale.US));
+                                    rv.setTextViewText(R.id.widget_wind, String.format("%.0f", data.wind.speed) + " m/s");
 
                                     rv.setImageViewResource(R.id.widget_icon,
                                             context.getResources()
                                                     .getIdentifier("ic_" + data.weather.get(0).icon
                                                             , "drawable", "com.geek.hw.meteo"));
+
+                                    rv.setImageViewBitmap(R.id.widget_wind_icon, rotatedArrow(context, data.wind.deg));
 
                                     appWidgetManager.updateAppWidget(appWidgetId, rv);
                                 }
@@ -81,5 +88,12 @@ public class Widget extends AppWidgetProvider {
             rv.setTextViewText(R.id.widget_city_name, context.getResources().getString(R.string.text_no_data));
             appWidgetManager.updateAppWidget(appWidgetId, rv);
         }
+    }
+
+    private Bitmap rotatedArrow(Context context, float degrees) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_wind_dir);
+        Matrix matrix = new Matrix();
+        matrix.preRotate(degrees + 180f);
+        return createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 }

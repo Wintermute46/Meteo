@@ -113,8 +113,8 @@
 
     <ImageView
         android:id="@+id/wind_icon"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="@dimen/start_margin"
         android:src="@drawable/ic_wind_dir"
