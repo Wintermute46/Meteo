@@ -36,10 +36,10 @@ public class SelectCityDialog extends DialogFragment {
 
         final Spinner spinner = new Spinner(getActivity());
 
-        String[] items = getResources().getStringArray(R.array.cities);
-        ArrayAdapter<String> spinItems = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,
-                items);
-        spinner.setAdapter(spinItems);
+//        String[] items = getResources().getStringArray(R.array.cities);
+//        ArrayAdapter<String> spinItems = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,
+//                items);
+//        spinner.setAdapter(spinItems);
         spinner.setSelection(spinnerId);
 
         int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());

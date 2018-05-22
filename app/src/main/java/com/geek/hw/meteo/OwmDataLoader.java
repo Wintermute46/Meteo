@@ -26,7 +26,6 @@ public class OwmDataLoader {
     private final static int OK_RESP = 200;
     private static final String LOG_TAG = OwmDataLoader.class.getSimpleName();
 
-    //    (final Context context, final String city) final Context context, final float lat, final float lon
     public static CityData getOwmData(final Context context, final double lat, final double lon) {
         try {
             OkHttpClient client = new OkHttpClient();

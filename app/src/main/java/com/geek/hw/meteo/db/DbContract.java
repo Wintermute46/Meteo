@@ -7,15 +7,17 @@ public class DbContract {
     private static final String SEP = ", ";
     private static final String TYPE_PRIMARY = " INTEGER PRIMARY KEY";
     private static final String TYPE_TEXT = " TEXT";
+    private static final String TYPE_DOUBLE = " DOUBLE";
 
     public static final String SQL_CREATE_WEATHER =
             "CREATE TABLE " + WeatherEntry.TAB_NAME + " (" +
                     WeatherEntry.COL_ID + TYPE_PRIMARY + SEP +
                     WeatherEntry.COL_CITY + TYPE_TEXT + " UNIQUE" + SEP +
-                    WeatherEntry.COL_CITY_C + TYPE_TEXT + SEP +
                     WeatherEntry.COL_UPD + TYPE_TEXT + SEP +
                     WeatherEntry.COL_ICON + TYPE_TEXT + SEP +
                     WeatherEntry.COL_DESCR + TYPE_TEXT + SEP +
+                    WeatherEntry.COL_WIND + TYPE_TEXT + SEP +
+                    WeatherEntry.COL_DEG + TYPE_DOUBLE + SEP +
                     WeatherEntry.COL_HUMID + TYPE_TEXT + SEP +
                     WeatherEntry.COL_PRESS + TYPE_TEXT + SEP +
                     WeatherEntry.COL_TEMP + TYPE_TEXT + ")";
@@ -52,10 +54,11 @@ public class DbContract {
         public static final String TAB_NAME = "weather";
         public static final String COL_ID = "id";
         public static final String COL_CITY = "city";
-        public static final String COL_CITY_C = "cityCountry";
         public static final String COL_UPD = "observed";
         public static final String COL_ICON = "iconId";
         public static final String COL_DESCR = "description";
+        public static final String COL_WIND = "wind";
+        public static final String COL_DEG = "degree";
         public static final String COL_HUMID = "humidity";
         public static final String COL_PRESS = "pressure";
         public static final String COL_TEMP = "temperature";

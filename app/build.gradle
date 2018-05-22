@@ -22,8 +22,20 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "places_api_key",
+                    (project.findProperty("PLACES_API_KEY")?:"")
+            resValue "string", "owm_api_key",
+                    (project.findProperty("OWM_API_KEY")?:"")
+            resValue "string", "checkwx_api_key",
+                    (project.findProperty("CHECKWX_API_KEY")?:"")
         }
         debug {
+            resValue "string", "places_api_key",
+                    (project.findProperty("PLACES_API_KEY")?:"")
+            resValue "string", "owm_api_key",
+                    (project.findProperty("OWM_API_KEY")?:"")
+            resValue "string", "checkwx_api_key",
+                    (project.findProperty("CHECKWX_API_KEY")?:"")
         }
     }
 }

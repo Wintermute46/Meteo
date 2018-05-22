@@ -9,6 +9,7 @@
     <string name="change_city_dialog">Select city</string>
     <string name="label_ok">OK</string>
     <string name="menu_set_city">Select another city</string>
+    <string name="menu_set_geo">Current location</string>
     <string name="place_not_found">Sorry, no weather data found.</string>
     <string name="metar_not_found">Sorry, no METAR data found.</string>
     <string name="weather_icon">weather icon</string>
@@ -34,21 +35,7 @@
     <string name="menu_item_open_weather">OpenWeatherMap</string>
     <string name="menu_item_metar">METAR</string>
 
-    <string name="owm_api_key">7777de2ebfa777bfaf983d3cd4139ba3</string>
-    <string name="checkwx_api_key">5b0c3ccddaa56b630a3c7baabb</string>
-
     <string name="unexpected_code">Unexpected code</string>
-
-    <string-array name="cities">
-        <item>Kursk</item>
-        <item>Belgorod</item>
-        <item>Voronezh</item>
-        <item>Lipetsk</item>
-        <item>Bryansk</item>
-        <item>Tula</item>
-        <item>Saint Petersburg</item>
-        <item>Moscow</item>
-    </string-array>
 
 
 </resources>

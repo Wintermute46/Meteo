@@ -97,7 +97,6 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
         humidLabel.setVisibility(View.INVISIBLE);
         pressLabel.setVisibility(View.INVISIBLE);
 
-
         city = getArguments().getString(MainActivity.CITY_NAME);
         region = getArguments().getString(MainActivity.REG_NAME);
         LAT = getArguments().getDouble(MainActivity.LATITUDE);
@@ -127,13 +126,13 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 
         if(cursor.moveToFirst()) {
             cityTextView.setText(cursor.getString(cursor.getColumnIndex("city")));
-//            cityTextView.setText(cursor.getString(cursor.getColumnIndex("cityCountry")));
             detailsTextView.setText(cursor.getString(cursor.getColumnIndex("description")));
             currentTemperatureTextView.setText(cursor.getString(cursor.getColumnIndex("temperature")));
             updatedTextView.setText(cursor.getString(cursor.getColumnIndex("observed")));
+            windTextView.setText(cursor.getString(cursor.getColumnIndex("wind")));
+            windIcon.setRotation(cursor.getFloat(cursor.getColumnIndex("degree")));
             humidTextView.setText(cursor.getString(cursor.getColumnIndex("humidity")));
             pressTextView.setText(cursor.getString(cursor.getColumnIndex("pressure")));
-
             setWeatherIcon(cursor.getString(cursor.getColumnIndex("iconId")));
         }
 
@@ -181,16 +180,12 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 
         try {
 
-            String name = data.name.toUpperCase(Locale.US) + ", " + data.sys.country;
             cv.put(DbContract.WeatherEntry.COL_CITY, city);
-//            cv.put(DbContract.WeatherEntry.COL_CITY, data.name);
-            cv.put(DbContract.WeatherEntry.COL_CITY_C, name);
-            name = city;
-            cityTextView.setText(name);
+            cityTextView.setText(city);
 
             regionTextView.setText(region);
 
-            String description = "";
+            String description = null;
 
             if(data.weather.size() != 0){
                 description = data.weather.get(0).description.toUpperCase(Locale.US);
@@ -200,12 +195,12 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
             detailsTextView.setText(description);
 
             String wind = String.format("%.0f", data.wind.speed) + " м/с";
-
+            cv.put(DbContract.WeatherEntry.COL_WIND, wind);
             windLabel.setVisibility(View.VISIBLE);
             windTextView.setText(wind);
 
             float rot = data.wind.deg + 180.0f;
-
+            cv.put(DbContract.WeatherEntry.COL_DEG, rot);
             windIcon.setVisibility(View.VISIBLE);
             windIcon.setRotation(rot);
 
@@ -257,7 +252,7 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
         String iconName = "ic_" + icon;
 
         weatherIcon.setImageResource(getResources()
-                .getIdentifier(iconName, "drawable", "com.geek.hw.meteo"));
+                .getIdentifier(iconName, "drawable", getActivity().getPackageName()));
         weatherIcon.startAnimation(anim);
     }
 

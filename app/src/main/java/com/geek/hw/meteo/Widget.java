@@ -52,6 +52,9 @@ public class Widget extends AppWidgetProvider {
                         List<Address> addr = gc.getFromLocation(lat, lon, 1);
                         String city = addr.get(0).getLocality();
 
+                        if (city.isEmpty())
+                            city = addr.get(0).getAdminArea();
+
                         rv.setTextViewText(R.id.widget_city_name, city);
 
                         new Thread() {

@@ -48,15 +48,18 @@ public class MainActivity extends AppCompatActivity
     private static double LON;
     private static String selectedCity;
     private static String selectedRegion;
+    private static boolean isGeo;
+    private NavigationView navigationView;
 
     public final static String CITY_NAME = "city";
     public final static String REG_NAME = "region";
     public final static String LATITUDE = "latitude";
     public final static String LONGITUDE = "longitude";
+    public final static String IS_GEO_METHOD = "isGeoMethod";
     public final static int SEL_CITY_REQUEST_CODE = 1;
     public final static int REQ_PERMISSION = 101;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private NavigationView navigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +70,10 @@ public class MainActivity extends AppCompatActivity
 
         Hawk.init(this).build();
 
-        if (Hawk.contains(CITY_NAME))
-            selectedCity = Hawk.get(CITY_NAME);
+        if (Hawk.contains(IS_GEO_METHOD))
+            isGeo = Hawk.get(IS_GEO_METHOD);
+        else
+            isGeo = true;
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,8 +84,20 @@ public class MainActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null && isGeo)
             showGeoWeather();
+        else if (savedInstanceState == null && !isGeo) {
+            if (Hawk.contains(CITY_NAME))
+                selectedCity = Hawk.get(CITY_NAME);
+            if (Hawk.contains(REG_NAME))
+                selectedRegion = Hawk.get(REG_NAME);
+            if (Hawk.contains(LONGITUDE))
+                LON = Hawk.get(LONGITUDE);
+            if (Hawk.contains(LATITUDE))
+                LAT = Hawk.get(LATITUDE);
+
+            setScreen(R.id.nav_open_weather);
+        }
 
     }
 
@@ -117,6 +134,12 @@ public class MainActivity extends AppCompatActivity
             List<Address> addr = gc.getFromLocation(LAT, LON, 1);
             selectedCity = addr.get(0).getLocality();
             selectedRegion = addr.get(0).getAdminArea();
+
+            if (selectedCity.isEmpty()) {
+                selectedCity = selectedRegion;
+                selectedRegion = "";
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(LOG_TAG, e.getMessage());
@@ -129,10 +152,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onStop();
-
         Hawk.put(CITY_NAME, selectedCity);
+        Hawk.put(REG_NAME, selectedRegion);
+        Hawk.put(LATITUDE, LAT);
+        Hawk.put(LONGITUDE, LON);
+        Hawk.put(IS_GEO_METHOD, isGeo);
+
+        super.onStop();
     }
+
+///////////////////////////////////////////////////////////////////////////
+// Permissions
+///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -189,6 +220,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_set_city:
+                isGeo = false;
                 try {
                     AutocompleteFilter filter = new AutocompleteFilter.Builder()
                             .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
@@ -199,6 +231,9 @@ public class MainActivity extends AppCompatActivity
                     Log.e(LOG_TAG, e.getMessage());
                 }
                 return true;
+            case R.id.action_set_geo:
+                isGeo = true;
+                showGeoWeather();
             default:
                 return super.onOptionsItemSelected(item);
         }
