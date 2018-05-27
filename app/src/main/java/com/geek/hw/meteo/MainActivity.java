@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PERMISSION);
         } else {
-            locationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
