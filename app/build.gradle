@@ -2,12 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'key0'
-            keyPassword 'optixPTN950'
-            storeFile file('C:/apk_keys/1.jks')
-            storePassword 'optixPTN950'
-        }
     }
     compileSdkVersion 26
     defaultConfig {

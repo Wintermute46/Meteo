@@ -5,9 +5,6 @@
     <string name="nav_header_title">Meteo</string>
     <string name="nav_header_subtitle">About actual weather</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-    <string name="change_city_dialog">Select city</string>
-    <string name="label_ok">OK</string>
     <string name="menu_set_city">Select another city</string>
     <string name="menu_set_geo">Current location</string>
     <string name="place_not_found">Sorry, no weather data found.</string>
@@ -26,16 +23,22 @@
     <string name="text_press">Pressure</string>
     <string name="text_elev">Elevation</string>
     <string name="text_no_data">No data</string>
-
     <string name="json_error">One or more fields not found in the JSON data</string>
-    <string name="server_error">No data was received from server</string>
-    <string name="server_img_error">No image was received from server</string>
     <string name="db_entry_add">Entry inserted, ID = </string>
-
     <string name="menu_item_open_weather">OpenWeatherMap</string>
     <string name="menu_item_metar">METAR</string>
-
-    <string name="unexpected_code">Unexpected code</string>
-
-
+    <string name="speed_meters">m/s</string>
+    <string name="speed_knots">knots</string>
+    <string name="last_upd">Last update:</string>
+    <string name="airport">Airport.</string>
+    <string name="utc">UTC</string>
+    <string name="msl">MSL</string>
+    <string name="percent">%</string>
+    <string name="mercury">Hg</string>
+    <string name="pressure">hPa</string>
+    <string name="celsius">℃</string>
+    <string name="fahrenheit">F</string>
+    <string name="deg">°</string>
+    <string name="meter">m</string>
+    <string name="foot">ft</string>
 </resources>

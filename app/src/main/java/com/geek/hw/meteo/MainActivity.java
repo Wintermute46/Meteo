@@ -21,7 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.geek.hw.meteo.ui.AddCityDialogListener;
+
 import com.geek.hw.meteo.ui.METARdataFragment;
 import com.geek.hw.meteo.ui.OWMdataFragment;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -42,7 +42,7 @@ import java.util.Locale;
 ///////////////////////////////////////////////////////////////////////////
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AddCityDialogListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private static double LAT;
     private static double LON;
@@ -286,11 +286,4 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
         navigationView.setCheckedItem(itemId);
     }
-
-    @Override
-    public void onSelectCity(String city) {
-        selectedCity = city;
-        setScreen(R.id.nav_open_weather);
-    }
-
 }

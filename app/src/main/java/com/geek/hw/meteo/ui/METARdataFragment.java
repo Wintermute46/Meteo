@@ -1,6 +1,5 @@
 package com.geek.hw.meteo.ui;
 
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,11 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.geek.hw.meteo.MainActivity;
 import com.geek.hw.meteo.MetarDataLoader;
-import com.geek.hw.meteo.OwmDataLoader;
 import com.geek.hw.meteo.R;
 import com.geek.hw.meteo.db.DbContract;
 import com.geek.hw.meteo.db.DbHelper;
-import com.geek.hw.meteo.models.CityData;
 import com.geek.hw.meteo.models.MetarData;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -82,7 +79,7 @@ public class METARdataFragment extends Fragment {
         if (LAT != 0 && LON != 0)
             updateMetarData(LAT, LON);
         else
-            Log.i("METAR", "No METAR coordinates");
+            Log.i(LOG_TAG, "No METAR coordinates");
 
         return view;
     }
@@ -101,20 +98,20 @@ public class METARdataFragment extends Fragment {
                                     null, selection, args, null, null, null);
 
         if(cursor.moveToFirst()) {
-            icao.setText(cursor.getString(cursor.getColumnIndex("icao")));
-            name.setText(cursor.getString(cursor.getColumnIndex("name")));
-            metarRaw.setText(cursor.getString(cursor.getColumnIndex("raw")));
-            observed.setText(cursor.getString(cursor.getColumnIndex("observed")));
-            currTemp.setText(cursor.getString(cursor.getColumnIndex("temperature")));
-            dewpoint.setText(cursor.getString(cursor.getColumnIndex("dewpoint")));
-            humidity.setText(cursor.getString(cursor.getColumnIndex("humidity")));
-            clouds.setText(cursor.getString(cursor.getColumnIndex("clouds")));
-            wind.setText(cursor.getString(cursor.getColumnIndex("wind")));
-            visibility.setText(cursor.getString(cursor.getColumnIndex("visibility")));
-            flightRules.setText(cursor.getString(cursor.getColumnIndex("flightrules")));
-            altimeter.setText(cursor.getString(cursor.getColumnIndex("altimeter")));
-            pressure.setText(cursor.getString(cursor.getColumnIndex("pressure")));
-            elevation.setText(cursor.getString(cursor.getColumnIndex("elevation")));
+            icao.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_ICAO)));
+            name.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_NAME)));
+            metarRaw.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_RAW)));
+            observed.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_UPD)));
+            currTemp.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_TEMP)));
+            dewpoint.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_DEW)));
+            humidity.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_HUMID)));
+            clouds.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_CLOUD)));
+            wind.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_WIND)));
+            visibility.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_VISIB)));
+            flightRules.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_FR)));
+            altimeter.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_ALT)));
+            pressure.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_PRESS)));
+            elevation.setText(cursor.getString(cursor.getColumnIndex(DbContract.MetarEntry.COL_ELEV)));
         }
 
         cursor.close();
@@ -162,7 +159,7 @@ public class METARdataFragment extends Fragment {
             cv.put(DbContract.MetarEntry.COL_ICAO, metar.data.get(0).icao);
             icao.setText(metar.data.get(0).icao);
 
-            String icaoName = metar.data.get(0).name + " Airport. " + getArguments().getString(MainActivity.CITY_NAME);
+            String icaoName = metar.data.get(0).name + " " + getString(R.string.airport) + " " + getArguments().getString(MainActivity.CITY_NAME);
             cv.put(DbContract.MetarEntry.COL_CITY, getArguments().getString(MainActivity.CITY_NAME));
             cv.put(DbContract.MetarEntry.COL_NAME, icaoName);
             name.setText(icaoName);
@@ -170,19 +167,21 @@ public class METARdataFragment extends Fragment {
             cv.put(DbContract.MetarEntry.COL_RAW, metar.data.get(0).rawText);
             metarRaw.setText(metar.data.get(0).rawText);
 
-            String observ = metar.data.get(0).observed + " UTC";
+            String observ = metar.data.get(0).observed + " " + getString(R.string.utc);
             cv.put(DbContract.MetarEntry.COL_UPD, observ);
             observed.setText(observ);
 
-            String currT = metar.data.get(0).temperature.celsius + " ℃ / " + metar.data.get(0).temperature.fahrenheit + " F";
+            String currT = metar.data.get(0).temperature.celsius + " " + getString(R.string.celsius) +
+                    " / " + metar.data.get(0).temperature.fahrenheit + " " + getString(R.string.fahrenheit);
             cv.put(DbContract.MetarEntry.COL_TEMP, currT);
             currTemp.setText(currT);
 
-            String dew = metar.data.get(0).dewpoint.celsius + " ℃ / " + metar.data.get(0).dewpoint.fahrenheit + " F";
+            String dew = metar.data.get(0).dewpoint.celsius + " " + getString(R.string.celsius) +
+                    " / " + metar.data.get(0).dewpoint.fahrenheit + " " + getString(R.string.fahrenheit);
             cv.put(DbContract.MetarEntry.COL_DEW, dew);
             dewpoint.setText(dew);
 
-            String humidit = metar.data.get(0).humidityPercent + "%";
+            String humidit = metar.data.get(0).humidityPercent + getString(R.string.percent);
             cv.put(DbContract.MetarEntry.COL_HUMID, humidit);
             humidity.setText(humidit);
 
@@ -190,8 +189,9 @@ public class METARdataFragment extends Fragment {
             cv.put(DbContract.MetarEntry.COL_CLOUD, cloud);
             clouds.setText(cloud);
 
-            String winds = metar.data.get(0).wind.degrees + "° " + metar.data.get(0).wind.speedKts + " knots"
-                            + " / " + knotsToMeters(metar.data.get(0).wind.speedKts) + " m/s";
+            String winds = metar.data.get(0).wind.degrees + getString(R.string.deg) + " " +
+                    metar.data.get(0).wind.speedKts + " " + getString(R.string.speed_knots) +
+                    " / " + knotsToMeters(metar.data.get(0).wind.speedKts) + " " + getString(R.string.speed_meters);
             cv.put(DbContract.MetarEntry.COL_WIND, winds);
             wind.setText(winds);
 
@@ -202,15 +202,16 @@ public class METARdataFragment extends Fragment {
             cv.put(DbContract.MetarEntry.COL_FR, metar.data.get(0).flightCategory);
             flightRules.setText(metar.data.get(0).flightCategory);
 
-            String alt = metar.data.get(0).barometer.hg + " Hg";
+            String alt = metar.data.get(0).barometer.hg + " " + getString(R.string.mercury);
             cv.put(DbContract.MetarEntry.COL_ALT, alt);
             altimeter.setText(alt);
 
-            String pres = metar.data.get(0).barometer.mb + " hPa";
+            String pres = metar.data.get(0).barometer.mb + " " + getString(R.string.pressure);
             cv.put(DbContract.MetarEntry.COL_PRESS, pres);
             pressure.setText(pres);
 
-            String elev = metar.data.get(0).elevation.feet + " ft / " + metar.data.get(0).elevation.meters + "m  MSL";
+            String elev = metar.data.get(0).elevation.feet + " " + getString(R.string.foot) +
+                    " / " + metar.data.get(0).elevation.meters + getString(R.string.meter) + " " + getString(R.string.msl);
             cv.put(DbContract.MetarEntry.COL_ELEV, elev);
             elevation.setText(elev);
 

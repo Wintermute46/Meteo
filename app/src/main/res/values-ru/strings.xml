@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meteo</string>
+    <string name="place_not_found">Нет данных с погодного сервера</string>
+    <string name="json_error">Ошибка в данных с сервера</string>
+    <string name="speed_meters">м/с</string>
+    <string name="last_upd">Обновлено:</string>
+    <string name="db_entry_add">Entry inserted, ID =</string>
+    <string name="speed_knots">узлов</string>
+    <string name="airport">Аэропорт.</string>
+    <string name="utc">UTC</string>
+    <string name="msl">MSL</string>
+    <string name="percent">%</string>
+    <string name="pressure">гПа</string>
+    <string name="celsius">℃</string>
+    <string name="mercury">Hg</string>
+    <string name="fahrenheit">F</string>
+    <string name="meter">м</string>
+    <string name="foot">ft</string>
+    <string name="navigation_drawer_open">Открыть навигационное меню</string>
+    <string name="navigation_drawer_close">Закрыть навигационное меню</string>
+    <string name="nav_header_title">Meteo</string>
+    <string name="nav_header_subtitle">Фактическая погода</string>
+    <string name="nav_header_desc">Навигация</string>
+    <string name="menu_set_city">Выбрать другой город</string>
+    <string name="menu_set_geo">Определить местоположение</string>
+    <string name="metar_not_found">Нет данных METAR</string>
+    <string name="weather_icon">Weather icon</string>
+    <string name="temperature_label">Температура</string>
+    <string name="text_curr_temp">Воздуха</string>
+    <string name="text_dewpoint">Точка росы</string>
+    <string name="text_humidity">Влажность</string>
+    <string name="text_wind">Ветер</string>
+    <string name="text_cloud">Облачность</string>
+    <string name="text_visibility">Видимость</string>
+    <string name="text_fr">Правила полетов</string>
+    <string name="readings_label">Данные</string>
+    <string name="text_alt">Давление мм рт. ст.</string>
+    <string name="text_press">Давление</string>
+    <string name="text_elev">Возвышение</string>
+    <string name="text_no_data">Нет данных</string>
+    <string name="menu_item_open_weather">OpenWeatherMap</string>
+    <string name="menu_item_metar">METAR</string>
+    <string name="deg">°</string>
+</resources>

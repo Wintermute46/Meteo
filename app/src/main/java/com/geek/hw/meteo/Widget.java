@@ -1,9 +1,11 @@
 package com.geek.hw.meteo;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +21,9 @@ import com.geek.hw.meteo.models.CityData;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -26,6 +31,15 @@ import static android.graphics.Bitmap.createBitmap;
 
 public class Widget extends AppWidgetProvider {
     private static final String LOG_TAG = Widget.class.getSimpleName();
+    public static final String ACTION_CLICKED = "com.geek.hw.meteo.CLICKED";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (ACTION_CLICKED.equals(intent.getAction())) {
+            context.startActivity(intent);
+        }
+        super.onReceive(context, intent);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -57,18 +71,28 @@ public class Widget extends AppWidgetProvider {
 
                         rv.setTextViewText(R.id.widget_city_name, city);
 
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.setAction(ACTION_CLICKED);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                        rv.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
+
                         new Thread() {
                             public void run() {
                                 final CityData data = OwmDataLoader.getOwmData(context, lat, lon);
 
                                 if (data != null) {
-                                    rv.setTextViewText(R.id.widget_currtemp, String.format("%.0f", data.main.tempBig) + " ℃");
-                                    rv.setTextViewText(R.id.widget_wind, String.format("%.0f", data.wind.speed) + " m/s");
+                                    rv.setTextViewText(R.id.widget_currtemp, String.format("%.0f", data.main.tempBig) + " " +
+                                            context.getString(R.string.celsius));
+                                    rv.setTextViewText(R.id.widget_wind, String.format("%.0f", data.wind.speed) + " " +
+                                            context.getString(R.string.speed_meters));
+                                    DateFormat df = DateFormat.getTimeInstance();
+                                    String updatedOn = context.getString(R.string.last_upd) + " " + df.format(new Date(data.dt * 1000));
+                                    rv.setTextViewText(R.id.widget_time, updatedOn);
 
                                     rv.setImageViewResource(R.id.widget_icon,
                                             context.getResources()
                                                     .getIdentifier("ic_" + data.weather.get(0).icon
-                                                            , "drawable", "com.geek.hw.meteo"));
+                                                            , "drawable", context.getPackageName()));
 
                                     rv.setImageViewBitmap(R.id.widget_wind_icon, rotatedArrow(context, data.wind.deg));
 
