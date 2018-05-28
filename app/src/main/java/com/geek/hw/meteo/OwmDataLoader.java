@@ -2,7 +2,6 @@ package com.geek.hw.meteo;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.geek.hw.meteo.models.CityData;
 import com.google.gson.Gson;
@@ -11,8 +10,6 @@ import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-import java.util.Locale;
 
 ///////////////////////////////////////////////////////////////////////////
 // Get the weather information

@@ -1,10 +1,9 @@
 package com.geek.hw.meteo;
 
-import com.geek.hw.meteo.models.MetarData;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.geek.hw.meteo.models.MetarData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.HttpUrl;
