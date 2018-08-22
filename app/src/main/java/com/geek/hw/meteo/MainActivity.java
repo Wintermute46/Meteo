@@ -21,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.geek.hw.meteo.ui.METARdataFragment;
 import com.geek.hw.meteo.ui.OWMdataFragment;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
