@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbHelper extends SQLiteOpenHelper {
 
     private final static String DB_NAME = "weather.db";
-    private final static int DB_VERSION = 2;
+    private final static int DB_VERSION = 3;
 
     public DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -21,7 +21,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqdb, int i, int i1) {
-        if ((i == 1) && (i1 == 2)) {
+        if ((i == 2) && (i1 == 3)) {
             sqdb.execSQL(DbContract.SQL_DELETE_WEATHER);
             sqdb.execSQL(DbContract.SQL_DELETE_METAR);
             onCreate(sqdb);

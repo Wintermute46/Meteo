@@ -1,13 +1,8 @@
 package com.geek.hw.meteo.ui;
 
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -20,20 +15,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.geek.hw.meteo.MainActivity;
 import com.geek.hw.meteo.OwmDataLoader;
 import com.geek.hw.meteo.R;
 import com.geek.hw.meteo.db.DbContract;
 import com.geek.hw.meteo.db.DbHelper;
 import com.geek.hw.meteo.models.CityData;
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -47,13 +34,18 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
     private final Handler handler = new Handler();
     private DbHelper dbHelper;
     private static final String LOG_TAG = OWMdataFragment.class.getSimpleName();
-    private final static String ICON_URL = "http://openweathermap.org/img/w/%s.png";
-    private String city;
+    private static String city;
+    private static String region;
+    private static double LAT;
+    private static double LON;
 
     private TextView cityTextView;
+    private TextView regionTextView;
     private TextView updatedTextView;
     private TextView detailsTextView;
     private TextView currentTemperatureTextView;
+    private TextView windTextView;
+    private ImageView windIcon;
     private TextView humidTextView;
     private TextView pressTextView;
     private ImageView weatherIcon;
@@ -67,18 +59,26 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
         dbHelper = new DbHelper(getContext());
 
         cityTextView = view.findViewById(R.id.city_field);
+        regionTextView = view.findViewById(R.id.region_field);
         updatedTextView = view.findViewById(R.id.updated_field);
         detailsTextView = view.findViewById(R.id.details_field);
         currentTemperatureTextView = view.findViewById(R.id.current_temperature_field);
+        windTextView = view.findViewById(R.id.text_owm_wind_p);
+        windIcon = view.findViewById(R.id.wind_icon);
         humidTextView = view.findViewById(R.id.text_owm_humidity_p);
         pressTextView = view.findViewById(R.id.text_owm_press_p);
         weatherIcon = view.findViewById(R.id.weather_icon);
-
+        windIcon.setVisibility(View.INVISIBLE);
         city = getArguments().getString(MainActivity.CITY_NAME);
+        region = getArguments().getString(MainActivity.REG_NAME);
+        LAT = getArguments().getDouble(MainActivity.LATITUDE);
+        LON = getArguments().getDouble(MainActivity.LONGITUDE);
 
-        getDataCache(city);
+        if (city != null)
+            getDataCache(city);
 
-        updateWeatherData(city);
+        if (LAT != 0 && LON != 0)
+            updateWeatherData();
 
         return view;
     }
@@ -97,16 +97,17 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
                 null, selection, args, null, null, null);
 
         if(cursor.moveToFirst()) {
-            cityTextView.setText(cursor.getString(cursor.getColumnIndex("cityCountry")));
-            detailsTextView.setText(cursor.getString(cursor.getColumnIndex("description")));
-            currentTemperatureTextView.setText(cursor.getString(cursor.getColumnIndex("temperature")));
-            updatedTextView.setText(cursor.getString(cursor.getColumnIndex("observed")));
-            humidTextView.setText(cursor.getString(cursor.getColumnIndex("humidity")));
-            pressTextView.setText(cursor.getString(cursor.getColumnIndex("pressure")));
-
-            setWeatherIcon(cursor.getString(cursor.getColumnIndex("iconId")));
+            cityTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_CITY)));
+            detailsTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_DESCR)));
+            currentTemperatureTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_TEMP)));
+            updatedTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_UPD)));
+            windTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_WIND)));
+            windIcon.setRotation(cursor.getFloat(cursor.getColumnIndex(DbContract.WeatherEntry.COL_DEG)));
+            windIcon.setVisibility(View.VISIBLE);
+            humidTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_HUMID)));
+            pressTextView.setText(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_PRESS)));
+            setWeatherIcon(cursor.getString(cursor.getColumnIndex(DbContract.WeatherEntry.COL_ICON)));
         }
-
         cursor.close();
         db.close();
     }
@@ -115,10 +116,10 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 // Get the weather
 ///////////////////////////////////////////////////////////////////////////
 
-    private void updateWeatherData(final String city) {
+    private void updateWeatherData() {
         new Thread() {
             public void run() {
-                final CityData data = OwmDataLoader.getOwmData(getActivity(), city);
+                final CityData data = OwmDataLoader.getOwmData(getActivity(), LAT, LON);
 
                 if (data == null) {
                     handler.post(new Runnable() {
@@ -150,12 +151,12 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 
         try {
 
-            String name = data.name.toUpperCase(Locale.US) + ", " + data.sys.country;
-            cv.put(DbContract.WeatherEntry.COL_CITY, data.name);
-            cv.put(DbContract.WeatherEntry.COL_CITY_C, name);
-            cityTextView.setText(name);
+            cv.put(DbContract.WeatherEntry.COL_CITY, city);
+            cityTextView.setText(city);
 
-            String description = "";
+            regionTextView.setText(region);
+
+            String description = null;
 
             if(data.weather.size() != 0){
                 description = data.weather.get(0).description.toUpperCase(Locale.US);
@@ -164,26 +165,32 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
             cv.put(DbContract.WeatherEntry.COL_DESCR, description);
             detailsTextView.setText(description);
 
-            String hum = data.main.humidity + "%";
+            String wind = String.format("%.0f", data.wind.speed) + " " + getString(R.string.speed_meters);
+            cv.put(DbContract.WeatherEntry.COL_WIND, wind);
+            windTextView.setText(wind);
+
+            float rot = data.wind.deg + 180.0f;
+            cv.put(DbContract.WeatherEntry.COL_DEG, rot);
+            windIcon.setVisibility(View.VISIBLE);
+            windIcon.setRotation(rot);
+
+            String hum = data.main.humidity + getString(R.string.percent);
             cv.put(DbContract.WeatherEntry.COL_HUMID, hum);
             humidTextView.setText(hum);
 
-            String press = data.main.pressure + " hPa";
+            String press = data.main.pressure + " " + getString(R.string.pressure);
             cv.put(DbContract.WeatherEntry.COL_PRESS, press);
             pressTextView.setText(press);
 
-            String currT = String.format("%.2f", data.main.tempBig) + " ℃";
+            String currT = String.format("%.0f", data.main.tempBig) + " " + getString(R.string.celsius);
             cv.put(DbContract.WeatherEntry.COL_TEMP, currT);
             currentTemperatureTextView.setText(currT);
 
             DateFormat df = DateFormat.getDateTimeInstance();
             String updatedOn = df.format(new Date(data.dt * 1000));
-            String upd = "Last update: " + updatedOn;
+            String upd = getString(R.string.last_upd) + " " + updatedOn;
             cv.put(DbContract.WeatherEntry.COL_UPD, upd);
             updatedTextView.setText(upd);
-
-            MainActivity.LAT = data.coord.lat;
-            MainActivity.LON = data.coord.lon;
 
             setWeatherIcon(data.weather.get(0).icon);
             cv.put(DbContract.WeatherEntry.COL_ICON, data.weather.get(0).icon);
@@ -207,46 +214,14 @@ public class OWMdataFragment extends Fragment implements Animation.AnimationList
 
     private void setWeatherIcon(String icon){
 
-        final String iconURL = String.format(ICON_URL, icon);
-
         final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha);
         anim.setAnimationListener(this);
 
-        new Thread() {
+        String iconName = "ic_" + icon;
 
-        public void run() {
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder builder = HttpUrl.parse(iconURL).newBuilder();
-            final Request request = new Request.Builder().url(builder.build().toString()).build();
-
-            try {
-                final Response response = client.newCall(request).execute();
-                InputStream inputStream = response.body().byteStream();
-
-                final Bitmap img = BitmapFactory.decodeStream(inputStream);
-
-                if(img != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            weatherIcon.setImageBitmap(img);
-                            weatherIcon.startAnimation(anim);
-                        }
-                    });
-                } else {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            weatherIcon.setImageResource(R.drawable.ic_45);
-                            weatherIcon.startAnimation(anim);
-                        }
-                    });
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(getActivity(), getString(R.string.server_img_error), Toast.LENGTH_LONG).show();
-            }
-        }
-        }.start();
+        weatherIcon.setImageResource(getResources()
+                .getIdentifier(iconName, "drawable", getActivity().getPackageName()));
+        weatherIcon.startAnimation(anim);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.geek.hw.meteo;
 
-import com.geek.hw.meteo.models.MetarData;
 import android.content.Context;
-import android.widget.Toast;
+import android.util.Log;
 
+import com.geek.hw.meteo.models.MetarData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.HttpUrl;
@@ -24,8 +24,9 @@ public class MetarDataLoader {
 
     private final static String METAR_URL = "https://api.checkwx.com/metar/lat/%f/lon/%f/decoded";
     private final static String KEY = "X-API-Key";
+    private static final String LOG_TAG = MetarDataLoader.class.getSimpleName();
 
-    public static MetarData getMetarData(final Context context, final float lat, final float lon) {
+    public static MetarData getMetarData(final Context context, final double lat, final double lon) {
 
             try {
                 OkHttpClient client = new OkHttpClient();
@@ -49,7 +50,7 @@ public class MetarDataLoader {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, context.getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                Log.e(LOG_TAG, e.getMessage());
                 return null;
             }
     }

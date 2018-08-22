@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_layout"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:background="@drawable/widget_rounded">
+
+    <TextView
+        android:id="@+id/widget_city_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        style="@style/LabelTextStyle" />
+
+    <ImageView
+        android:id="@+id/widget_icon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/widget_city_name"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/widget_currtemp"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_marginEnd="@dimen/start_margin"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:layout_alignTop="@+id/widget_icon"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        style="@style/LabelTextStyle" />
+
+    <TextView
+        android:id="@+id/widget_wind"
+        style="@style/LabelTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widget_wind_icon"
+        android:layout_marginEnd="@dimen/start_margin"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/widget_time"
+        style="@style/DataTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_below="@+id/widget_wind"
+        android:layout_marginEnd="@dimen/start_margin"
+        android:layout_marginStart="@dimen/start_margin"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/widget_wind_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/start_margin"
+        android:layout_alignTop="@+id/widget_icon" />
+
+
+</RelativeLayout>

@@ -12,6 +12,7 @@ public class CityData {
     public String name;
     public int cod;
     public MainWeatherInfo main;
+    public Wind wind;
     public System sys;
     public long dt;
 

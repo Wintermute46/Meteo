@@ -1,113 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/city_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="16dp"
-        android:textSize="32sp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/LabelTextStyle" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/updated_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="@dimen/start_margin"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="@dimen/updated_font_size"
-        app:layout_constraintTop_toBottomOf="@+id/city_field"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/city_field"
+            style="@style/LabelTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/start_margin"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="32sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/weather_icon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/weather_icon"
-        android:scaleType="fitXY"
-        android:background="?selectableItemBackground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current_temperature_field" />
+        <TextView
+            android:id="@+id/region_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/start_margin"
+            android:layout_marginTop="@dimen/start_margin"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/updated_font_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city_field" />
 
-    <TextView
-        android:id="@+id/current_temperature_field"
-        style="@style/LabelTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/temperature_font_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updated_field" />
+        <ImageView
+            android:id="@+id/weather_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/start_margin"
+            android:layout_marginTop="@dimen/start_margin"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/weather_icon"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/region_field" />
 
-    <TextView
-        android:id="@+id/details_field"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/weather_icon"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weather_icon"
-        style="@style/LabelTextStyle" />
+        <TextView
+            android:id="@+id/current_temperature_field"
+            style="@style/LabelTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/start_margin"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="@dimen/temperature_font_size"
+            app:layout_constraintStart_toEndOf="@+id/weather_icon"
+            app:layout_constraintTop_toTopOf="@+id/weather_icon" />
 
-    <TextView
-        android:id="@+id/text_owm_humidity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_humidity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_field"
-        style="@style/LabelTextStyle" />
+        <TextView
+            android:id="@+id/details_field"
+            style="@style/LabelTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weather_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/start_margin"
+            android:layout_marginTop="@dimen/start_margin"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:layout_constraintStart_toEndOf="@+id/weather_icon"
+            app:layout_constraintTop_toBottomOf="@+id/current_temperature_field" />
 
-    <TextView
-        android:id="@+id/text_owm_press"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/start_margin"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_press"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_owm_humidity"
-        style="@style/LabelTextStyle" />
+        <ImageView
+            android:id="@+id/wind_ic"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="@dimen/start_margin"
+            android:layout_marginTop="@dimen/double_start_margin"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/weather_icon"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:srcCompat="@drawable/ic_wind" />
 
-    <TextView
-        android:id="@+id/text_owm_humidity_p"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text_owm_humidity"
-        app:layout_constraintStart_toEndOf="@+id/text_owm_humidity"
-        style="@style/DataTextStyle" />
+        <TextView
+            android:id="@+id/text_owm_wind_p"
+            style="@style/DataTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/double_start_margin"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toEndOf="@+id/wind_ic"
+            app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
 
-    <TextView
-        android:id="@+id/text_owm_press_p"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/text_owm_press"
-        app:layout_constraintStart_toEndOf="@+id/text_owm_press"
-        style="@style/DataTextStyle" />
+        <ImageView
+            android:id="@+id/wind_icon"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/start_margin"
+            android:layout_marginStart="@dimen/start_margin"
+            android:src="@drawable/ic_wind_dir"
+            app:layout_constraintBottom_toBottomOf="@+id/wind_ic"
+            app:layout_constraintStart_toEndOf="@+id/text_owm_wind_p" />
 
+        <ImageView
+            android:id="@+id/humid_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="@dimen/start_margin"
+            android:layout_marginTop="@dimen/start_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/wind_ic"
+            app:srcCompat="@drawable/ic_humid" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/text_owm_humidity_p"
+            style="@style/DataTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/double_start_margin"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toEndOf="@+id/humid_icon"
+            app:layout_constraintTop_toBottomOf="@+id/wind_ic" />
+
+        <ImageView
+            android:id="@+id/press_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="@dimen/start_margin"
+            android:layout_marginTop="@dimen/start_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/humid_icon"
+            app:srcCompat="@drawable/ic_press" />
+
+        <TextView
+            android:id="@+id/text_owm_press_p"
+            style="@style/DataTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/double_start_margin"
+            android:layout_marginTop="@dimen/double_start_margin"
+            app:layout_constraintStart_toEndOf="@+id/press_icon"
+            app:layout_constraintTop_toBottomOf="@+id/humid_icon" />
+
+        <TextView
+            android:id="@+id/updated_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/start_margin"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="@dimen/updated_font_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/press_icon" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

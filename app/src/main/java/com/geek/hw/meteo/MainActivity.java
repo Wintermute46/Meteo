@@ -1,36 +1,65 @@
 package com.geek.hw.meteo;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.geek.hw.meteo.ui.AddCityDialogListener;
 import com.geek.hw.meteo.ui.METARdataFragment;
 import com.geek.hw.meteo.ui.OWMdataFragment;
-import com.geek.hw.meteo.ui.SelectCityDialog;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.orhanobut.hawk.Hawk;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 ///////////////////////////////////////////////////////////////////////////
 // MainActivity with drawer
 ///////////////////////////////////////////////////////////////////////////
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AddCityDialogListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static float LAT;
-    public static float LON;
+    private static double LAT;
+    private static double LON;
+    private static String selectedCity;
+    private static String selectedRegion;
+    private static boolean isGeo;
+    private NavigationView navigationView;
 
     public final static String CITY_NAME = "city";
-    private static String selectedCity;
-    private NavigationView navigationView;
+    public final static String REG_NAME = "region";
+    public final static String LATITUDE = "latitude";
+    public final static String LONGITUDE = "longitude";
+    public final static String IS_GEO_METHOD = "isGeoMethod";
+    public final static int SEL_CITY_REQUEST_CODE = 1;
+    public final static int REQ_PERMISSION = 101;
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +70,10 @@ public class MainActivity extends AppCompatActivity
 
         Hawk.init(this).build();
 
-        if (Hawk.contains(CITY_NAME))
-            selectedCity = Hawk.get(CITY_NAME);
+        if (Hawk.contains(IS_GEO_METHOD))
+            isGeo = Hawk.get(IS_GEO_METHOD);
         else
-            selectedCity = getResources().getStringArray(R.array.cities)[0];
+            isGeo = true;
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -55,9 +84,66 @@ public class MainActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (savedInstanceState == null)
-            setScreen(R.id.nav_open_weather, selectedCity);
+        if (savedInstanceState == null && isGeo)
+            showGeoWeather();
+        else if (savedInstanceState == null && !isGeo) {
+            if (Hawk.contains(CITY_NAME))
+                selectedCity = Hawk.get(CITY_NAME);
+            if (Hawk.contains(REG_NAME))
+                selectedRegion = Hawk.get(REG_NAME);
+            if (Hawk.contains(LONGITUDE))
+                LON = Hawk.get(LONGITUDE);
+            if (Hawk.contains(LATITUDE))
+                LAT = Hawk.get(LATITUDE);
 
+            setScreen(R.id.nav_open_weather);
+        }
+
+    }
+
+///////////////////////////////////////////////////////////////////////////
+// Get location
+///////////////////////////////////////////////////////////////////////////
+
+    private void showGeoWeather() {
+
+        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQ_PERMISSION);
+        } else {
+            locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        LAT = location.getLatitude();
+                        LON = location.getLongitude();
+
+                        getCityRegionName();
+                        setScreen(R.id.nav_open_weather);
+                    }
+                }
+            });
+        }
+    }
+
+    private void getCityRegionName() {
+        Geocoder gc = new Geocoder(getApplicationContext(), Locale.getDefault());
+        try {
+            List<Address> addr = gc.getFromLocation(LAT, LON, 1);
+            selectedCity = addr.get(0).getLocality();
+            selectedRegion = addr.get(0).getAdminArea();
+
+            if (selectedCity.isEmpty()) {
+                selectedCity = selectedRegion;
+                selectedRegion = "";
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, e.getMessage());
+        }
     }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -66,9 +152,27 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        super.onStop();
-
         Hawk.put(CITY_NAME, selectedCity);
+        Hawk.put(REG_NAME, selectedRegion);
+        Hawk.put(LATITUDE, LAT);
+        Hawk.put(LONGITUDE, LON);
+        Hawk.put(IS_GEO_METHOD, isGeo);
+
+        super.onStop();
+    }
+
+///////////////////////////////////////////////////////////////////////////
+// Permissions
+///////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQ_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    showGeoWeather();
+        }
     }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -92,24 +196,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_set_city:
-                new SelectCityDialog().show(getSupportFragmentManager(), "branch_filter_mode_dialog");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_open_weather:
-                setScreen(R.id.nav_open_weather, selectedCity);
+                setScreen(R.id.nav_open_weather);
                 break;
             case R.id.nav_metar:
-                setScreen(R.id.nav_metar, selectedCity);
+                setScreen(R.id.nav_metar);
                 break;
         }
 
@@ -119,17 +212,54 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+///////////////////////////////////////////////////////////////////////////
+// Google places
+///////////////////////////////////////////////////////////////////////////
+
     @Override
-    public void onSelectCity(String city) {
-        selectedCity = city;
-        setScreen(R.id.nav_open_weather, selectedCity);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_set_city:
+                isGeo = false;
+                try {
+                    AutocompleteFilter filter = new AutocompleteFilter.Builder()
+                            .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES).build();
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .setFilter(filter).build(this);
+                    startActivityForResult(intent, SEL_CITY_REQUEST_CODE);
+                } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
+                    Log.e(LOG_TAG, e.getMessage());
+                }
+                return true;
+            case R.id.action_set_geo:
+                isGeo = true;
+                showGeoWeather();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+///////////////////////////////////////////////////////////////////////////
+// Set another city and coordinates
+///////////////////////////////////////////////////////////////////////////
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SEL_CITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Place place = PlaceAutocomplete.getPlace(this, data);
+            LAT = place.getLatLng().latitude;
+            LON = place.getLatLng().longitude;
+            getCityRegionName();
+            setScreen(R.id.nav_open_weather);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 ///////////////////////////////////////////////////////////////////////////
 // Fragments call
 ///////////////////////////////////////////////////////////////////////////
 
-    private void setScreen(int itemId, String city) {
+    private void setScreen(int itemId) {
         Fragment fragment;
 
         switch (itemId) {
@@ -146,12 +276,14 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle bundle = new Bundle();
-        bundle.putString(CITY_NAME, city);
+        bundle.putString(CITY_NAME, selectedCity);
+        bundle.putString(REG_NAME, selectedRegion);
+        bundle.putDouble(LATITUDE, LAT);
+        bundle.putDouble(LONGITUDE, LON);
         fragment.setArguments(bundle);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, fragment);
         transaction.commit();
         navigationView.setCheckedItem(itemId);
     }
-
 }
